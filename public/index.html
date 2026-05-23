@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebnWell Roadmap — Strategic Vision Dashboard</title>
+  <meta name="description" content="Interactive roadmap dashboard for vibe coding, production automation, sales accomplishment, and personal productivity.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
+</head>
+<body>
+  <div id="app">
+    <!-- Ambient Background -->
+    <div class="ambient-bg">
+      <div class="ambient-orb ambient-orb--1"></div>
+      <div class="ambient-orb ambient-orb--2"></div>
+      <div class="ambient-orb ambient-orb--3"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+      <div class="header__logo">
+        <div class="header__logo-icon">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <rect x="2" y="2" width="24" height="24" rx="6" stroke="url(#logoGrad)" stroke-width="2.5"/>
+            <path d="M8 14h12M14 8v12" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round"/>
+            <defs>
+              <linearGradient id="logoGrad" x1="0" y1="0" x2="28" y2="28">
+                <stop stop-color="#6366f1"/>
+                <stop offset="1" stop-color="#a78bfa"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="header__title">Roadmap</span>
+        <span class="header__badge">WebnWell</span>
+      </div>
+      <div class="header__meta">
+        <span class="header__date" id="headerDate"></span>
+      </div>
+    </header>
+
+    <!-- Roadmap Switcher -->
+    <nav class="switcher" id="switcher">
+      <button class="switcher__btn active" data-roadmap="vibe-coding" id="btn-vibe-coding">
+        <span class="switcher__icon">⚡</span>
+        <span class="switcher__label">Vibe Coding</span>
+      </button>
+      <button class="switcher__btn" data-roadmap="production" id="btn-production">
+        <span class="switcher__icon">🏭</span>
+        <span class="switcher__label">Production</span>
+      </button>
+      <button class="switcher__btn" data-roadmap="sales" id="btn-sales">
+        <span class="switcher__icon">📈</span>
+        <span class="switcher__label">Sales</span>
+      </button>
+      <button class="switcher__btn" data-roadmap="productivity" id="btn-productivity">
+        <span class="switcher__icon">🎯</span>
+        <span class="switcher__label">Productivity</span>
+      </button>
+      <div class="switcher__indicator" id="switcherIndicator"></div>
+    </nav>
+
+    <!-- Roadmap Content -->
+    <main class="roadmap" id="roadmapContainer">
+      <!-- Dynamically rendered -->
+    </main>
+
+    <!-- Progress Overview -->
+    <section class="overview" id="overview">
+      <!-- Dynamically rendered -->
+    </section>
+  </div>
+
+  <script src="/data.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

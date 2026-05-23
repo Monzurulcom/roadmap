@@ -1,0 +1,9 @@
+{
+  "name": "webnwell-roadmap",
+  "version": "1.0.0",
+  "description": "WebnWell Roadmap — Visual roadmaps for vibe coding, production automation, sales & productivity",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  }
+}

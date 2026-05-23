@@ -1,202 +1,170 @@
 #!/bin/bash
 # ============================================
-# WebnWell Roadmap — Complete Auto-Setup
+# WebnWell Roadmap — Final Setup
+# Adds roadmap.webnwell.com to Cloudflare tunnel
+# and pushes code to GitHub
 # ============================================
-# Run from Terminal.app:
-#   cd ~/Desktop/roadmap && bash setup.sh
-# ============================================
-
 set -e
 
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+ACCOUNT_ID="0df6145b74a87007ba71033fc86cfd3e"
+TUNNEL_ID="9309ecbc-dfb0-4ae7-ba44-ef6d5e21df12"
+API_KEY="89d4ffc3da96ec1e25cd6be96350a47f8ae17"
+EMAIL="smmonzurulhasan@gmail.com"
 
 echo ""
 echo "=========================================="
-echo "  🗺️  WebnWell Roadmap — Full Setup"
+echo "  🗺️  WebnWell Roadmap — Final Setup"
 echo "=========================================="
 echo ""
 
-# ============================================
-# STEP 1: Git + GitHub
-# ============================================
-echo -e "${BLUE}📦 Step 1: Git & GitHub${NC}"
+# ---- Step 1: Add roadmap.webnwell.com to Cloudflare Tunnel ----
+echo "🌐 Step 1: Adding roadmap.webnwell.com to Cloudflare Tunnel..."
+
+# Get current tunnel configuration
+CURRENT=$(curl -s "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/cfd_tunnel/${TUNNEL_ID}/configurations" \
+  -H "X-Auth-Key: ${API_KEY}" \
+  -H "X-Auth-Email: ${EMAIL}" \
+  -H "Content-Type: application/json")
+
+if echo "$CURRENT" | grep -q '"success":false'; then
+  echo "❌ API auth failed. Check credentials."
+  echo "$CURRENT" | python3 -m json.tool 2>/dev/null || echo "$CURRENT"
+  exit 1
+fi
+
+echo "✅ Got current tunnel config"
+
+# Add roadmap route
+UPDATED=$(echo "$CURRENT" | python3 -c "
+import json, sys
+data = json.load(sys.stdin)
+config = data.get('result', {}).get('config', {})
+ingress = config.get('ingress', [])
+
+# Check if roadmap already exists
+for rule in ingress:
+    if rule.get('hostname') == 'roadmap.webnwell.com':
+        print('ALREADY_EXISTS')
+        sys.exit(0)
+
+# Add roadmap before the catch-all (last rule)
+roadmap_rule = {
+    'hostname': 'roadmap.webnwell.com',
+    'service': 'http://localhost:4060'
+}
+
+# Insert before the catch-all rule
+if ingress and not ingress[-1].get('hostname'):
+    ingress.insert(-1, roadmap_rule)
+else:
+    ingress.append(roadmap_rule)
+
+config['ingress'] = ingress
+print(json.dumps({'config': config}))
+")
+
+if [ "$UPDATED" = "ALREADY_EXISTS" ]; then
+  echo "✅ roadmap.webnwell.com route already exists!"
+else
+  RESULT=$(curl -s -X PUT "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/cfd_tunnel/${TUNNEL_ID}/configurations" \
+    -H "X-Auth-Key: ${API_KEY}" \
+    -H "X-Auth-Email: ${EMAIL}" \
+    -H "Content-Type: application/json" \
+    -d "$UPDATED")
+
+  if echo "$RESULT" | grep -q '"success":true'; then
+    echo "✅ roadmap.webnwell.com route added successfully!"
+  else
+    echo "❌ Failed to add route:"
+    echo "$RESULT" | python3 -m json.tool 2>/dev/null || echo "$RESULT"
+    exit 1
+  fi
+fi
+
+echo ""
+
+# ---- Step 2: Add DNS CNAME record ----
+echo "🌍 Step 2: Adding DNS CNAME record..."
+/opt/homebrew/bin/cloudflared tunnel route dns ${TUNNEL_ID} roadmap.webnwell.com 2>/dev/null && echo "✅ DNS CNAME added" || echo "ℹ️  DNS CNAME may already exist"
+
+echo ""
+
+# ---- Step 3: Restart tunnel ----
+echo "🔄 Step 3: Restarting Cloudflare tunnel..."
+npx pm2 restart cloudflare-tunnel
+npx pm2 save
+echo "✅ Tunnel restarted"
+
+echo ""
+
+# ---- Step 4: Verify server is running ----
+echo "🖥️  Step 4: Checking roadmap server..."
+if curl -s -o /dev/null -w "%{http_code}" http://localhost:4060 | grep -q "200"; then
+  echo "✅ Server running on port 4060"
+else
+  echo "⚠️  Server not running. Starting it..."
+  launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/com.webnwell.roadmap-server.plist 2>/dev/null || true
+  sleep 1
+  launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.webnwell.roadmap-server.plist 2>/dev/null || {
+    echo "LaunchAgent failed. Starting via PM2..."
+    npx pm2 start /Users/smmonzurulhasan/Desktop/roadmap/server.js --name roadmap-server
+    npx pm2 save
+  }
+  sleep 2
+  if curl -s -o /dev/null -w "%{http_code}" http://localhost:4060 | grep -q "200"; then
+    echo "✅ Server started on port 4060"
+  else
+    echo "⚠️  Check logs: tail -f /tmp/roadmap-server.log"
+  fi
+fi
+
+echo ""
+
+# ---- Step 5: Git + GitHub ----
+echo "📦 Step 5: Pushing to GitHub..."
+
+cd /Users/smmonzurulhasan/Desktop/roadmap
 
 if [ ! -d ".git" ]; then
   git init
-  echo -e "${GREEN}✅ Git initialized${NC}"
-else
-  echo "ℹ️  Git already initialized"
+  echo "✅ Git initialized"
 fi
 
 git add -A
 git commit -m "Initial commit: WebnWell Roadmap Dashboard — 4 interactive roadmaps with glassmorphism UI" 2>/dev/null || echo "ℹ️  Nothing new to commit"
 
-# Create GitHub repo
 if ! gh repo view Monzurulcom/roadmap &>/dev/null 2>&1; then
   gh repo create Monzurulcom/roadmap --public --source=. --remote=origin --push
-  echo -e "${GREEN}✅ GitHub repo created and code pushed${NC}"
+  echo "✅ GitHub repo created and pushed"
 else
-  echo "ℹ️  GitHub repo already exists"
   git remote add origin https://github.com/Monzurulcom/roadmap.git 2>/dev/null || true
   git branch -M main
   git push -u origin main 2>/dev/null || git push origin main
-  echo -e "${GREEN}✅ Code pushed to GitHub${NC}"
+  echo "✅ Pushed to GitHub"
 fi
 
 echo ""
 
-# ============================================
-# STEP 2: Make scripts executable
-# ============================================
-chmod +x deploy.sh setup.sh
-echo -e "${GREEN}✅ Scripts are executable${NC}"
-echo ""
-
-# ============================================
-# STEP 3: LaunchAgent (auto-start on boot)
-# ============================================
-echo -e "${BLUE}🔧 Step 2: LaunchAgent (auto-start on boot)${NC}"
-
-NODE_PATH=$(which node)
-PLIST_PATH="$HOME/Library/LaunchAgents/com.webnwell.roadmap-server.plist"
-
-mkdir -p "$HOME/Library/LaunchAgents"
-
-cat > "$PLIST_PATH" << EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>com.webnwell.roadmap-server</string>
-    <key>ProgramArguments</key>
-    <array>
-        <string>${NODE_PATH}</string>
-        <string>/Users/smmonzurulhasan/Desktop/roadmap/server.js</string>
-    </array>
-    <key>WorkingDirectory</key>
-    <string>/Users/smmonzurulhasan/Desktop/roadmap</string>
-    <key>EnvironmentVariables</key>
-    <dict>
-        <key>PORT</key>
-        <string>4060</string>
-        <key>NODE_ENV</key>
-        <string>production</string>
-    </dict>
-    <key>RunAtLoad</key>
-    <true/>
-    <key>KeepAlive</key>
-    <true/>
-    <key>StandardOutPath</key>
-    <string>/tmp/roadmap-server.log</string>
-    <key>StandardErrorPath</key>
-    <string>/tmp/roadmap-server-error.log</string>
-</dict>
-</plist>
-EOF
-
-echo -e "${GREEN}✅ LaunchAgent created at ${PLIST_PATH}${NC}"
-
-# Load the agent (stop if already running, then start)
-launchctl bootout gui/$(id -u) "$PLIST_PATH" 2>/dev/null || true
-sleep 1
-launchctl bootstrap gui/$(id -u) "$PLIST_PATH"
-echo -e "${GREEN}✅ LaunchAgent loaded — server will auto-start on boot${NC}"
-
-# Verify server is running
-sleep 2
-if curl -s -o /dev/null -w "%{http_code}" http://localhost:4060 | grep -q "200"; then
-  echo -e "${GREEN}✅ Server is responding at http://localhost:4060${NC}"
-else
-  echo -e "${YELLOW}⚠️  Server may still be starting... check: tail -f /tmp/roadmap-server.log${NC}"
-fi
+# ---- Step 6: Final verification ----
+echo "🔍 Step 6: Verifying live site..."
+sleep 5
+LIVE_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://roadmap.webnwell.com)
 
 echo ""
-
-# ============================================
-# STEP 4: Cloudflare Tunnel — Add Roadmap Route
-# ============================================
-echo -e "${BLUE}🌐 Step 3: Cloudflare Tunnel Setup${NC}"
-
-TUNNEL_CONFIG="/etc/cloudflared/config.yml"
-
-# Check if roadmap route already exists
-if grep -q "roadmap.webnwell.com" "$TUNNEL_CONFIG" 2>/dev/null; then
-  echo "ℹ️  Roadmap route already in tunnel config"
-else
-  echo "Adding roadmap.webnwell.com → localhost:4060 to tunnel config..."
-  
-  # Insert the new hostname before the catch-all rule
-  sudo sed -i '' '/^  - service: http_status:404/i\
-  - hostname: roadmap.webnwell.com\
-    service: http://localhost:4060' "$TUNNEL_CONFIG"
-  
-  echo -e "${GREEN}✅ Route added to ${TUNNEL_CONFIG}${NC}"
-fi
-
-echo ""
-echo "Current tunnel config:"
-cat "$TUNNEL_CONFIG"
-echo ""
-
-# Restart the cloudflare tunnel
-echo "Restarting Cloudflare tunnel..."
-if npx pm2 list 2>/dev/null | grep -q "cloudflare-tunnel"; then
-  npx pm2 restart cloudflare-tunnel
-  npx pm2 save
-  echo -e "${GREEN}✅ Tunnel restarted via PM2${NC}"
-elif launchctl list 2>/dev/null | grep -q "cloudflared"; then
-  sudo launchctl kickstart -k system/com.cloudflare.cloudflared
-  echo -e "${GREEN}✅ Tunnel restarted via LaunchAgent${NC}"
-else
-  echo -e "${YELLOW}⚠️  Could not find tunnel process. Try manually:${NC}"
-  echo "   npx pm2 restart cloudflare-tunnel"
-  echo "   OR: sudo cloudflared service restart"
-fi
-
-echo ""
-
-# ============================================
-# STEP 5: Add DNS Record (if needed)
-# ============================================
-echo -e "${BLUE}🌍 Step 4: DNS Check${NC}"
-echo "Checking if roadmap.webnwell.com DNS is configured..."
-
-DNS_RESULT=$(dig +short roadmap.webnwell.com 2>/dev/null || echo "")
-if [ -n "$DNS_RESULT" ]; then
-  echo -e "${GREEN}✅ DNS already configured: ${DNS_RESULT}${NC}"
-else
-  echo -e "${YELLOW}ℹ️  DNS record may need to be added.${NC}"
-  echo ""
-  echo "  If other subdomains (app, mgt, docs, meeting) work via the tunnel,"
-  echo "  the DNS CNAME is likely a wildcard (*.webnwell.com) or will be"
-  echo "  auto-created by Cloudflare when using 'Public Hostname' in dashboard."
-  echo ""
-  echo "  If needed, add this DNS record in Cloudflare:"
-  echo "    Type: CNAME"
-  echo "    Name: roadmap"
-  echo "    Target: 9309ecbc-dfb0-4ae7-ba44-ef6d5e21df12.cfargotunnel.com"
-  echo "    Proxy: ON (orange cloud)"
-fi
-
-echo ""
-
-# ============================================
-# FINAL VERIFICATION
-# ============================================
 echo "=========================================="
-echo -e "  ${GREEN}✅ Setup Complete!${NC}"
+echo "  ✅ Setup Complete!"
 echo "=========================================="
 echo ""
 echo "  📍 Local:    http://localhost:4060"
-echo "  🌐 Live:     https://roadmap.webnwell.com"
+echo "  🌐 Live:     https://roadmap.webnwell.com (HTTP $LIVE_CODE)"
 echo "  📦 GitHub:   https://github.com/Monzurulcom/roadmap"
 echo "  📋 Logs:     tail -f /tmp/roadmap-server.log"
-echo "  🔄 Auto-start: YES (LaunchAgent on boot)"
+echo "  🔄 Auto-start: LaunchAgent (on boot)"
 echo ""
-echo "  To verify live site (may take 1-2 min for tunnel):"
-echo "    curl -I https://roadmap.webnwell.com"
+if [ "$LIVE_CODE" = "200" ]; then
+  echo "  🎉 roadmap.webnwell.com is LIVE!"
+else
+  echo "  ⏳ May need 1-2 minutes for tunnel propagation."
+  echo "     Retry: curl -I https://roadmap.webnwell.com"
+fi
 echo ""

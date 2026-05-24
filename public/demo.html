@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roadmap Demo — Enhanced UI with Inline Editing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/demo-styles.css">
+</head>
+<body>
+  <div id="app" data-theme="vibe-coding">
+    <div class="ambient-bg">
+      <div class="ambient-orb ambient-orb--1"></div>
+      <div class="ambient-orb ambient-orb--2"></div>
+      <div class="ambient-orb ambient-orb--3"></div>
+    </div>
+
+    <header class="header">
+      <div class="header__logo">
+        <div class="header__logo-icon">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <rect x="2" y="2" width="24" height="24" rx="6" stroke="url(#logoGrad)" stroke-width="2.5"/>
+            <path d="M8 14h12M14 8v12" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round"/>
+            <defs><linearGradient id="logoGrad" x1="0" y1="0" x2="28" y2="28"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs>
+          </svg>
+        </div>
+        <span class="header__title">Roadmap</span>
+        <span class="header__badge">Demo</span>
+      </div>
+      <div class="header__meta">
+        <a href="/" class="demo-back-link">← Back to Live</a>
+        <button class="demo-reset-btn" id="resetBtn" title="Reset all changes">↺ Reset</button>
+      </div>
+    </header>
+
+    <!-- Overall Progress Ring -->
+    <div class="demo-progress-hero" id="progressHero"></div>
+
+    <!-- Roadmap Content -->
+    <main class="roadmap roadmap--visible" id="roadmapContainer"></main>
+  </div>
+
+  <script src="/data.js"></script>
+  <script src="/demo-app.js"></script>
+</body>
+</html>

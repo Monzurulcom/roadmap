@@ -1,0 +1,365 @@
+/* =============================================
+   Demo Page — Enhanced Styles
+   ============================================= */
+
+/* --- Back Link & Reset --- */
+.demo-back-link {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-card);
+  transition: all var(--duration-fast) var(--ease-out);
+}
+.demo-back-link:hover {
+  color: var(--text-primary);
+  border-color: var(--theme-primary);
+  background: var(--theme-glow);
+}
+
+.demo-reset-btn {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: var(--accent-rose);
+  background: rgba(251, 113, 133, 0.08);
+  border: 1px solid rgba(251, 113, 133, 0.2);
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+.demo-reset-btn:hover {
+  background: rgba(251, 113, 133, 0.15);
+  transform: scale(1.05);
+}
+
+/* --- Progress Hero (Ring + Stats) --- */
+.demo-progress-hero {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xl);
+  padding: var(--space-xl) var(--space-2xl);
+  margin: var(--space-xl) 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-xl);
+  backdrop-filter: blur(20px);
+}
+
+.progress-ring-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.progress-ring-wrap svg { display: block; }
+
+.progress-ring__bg {
+  fill: none;
+  stroke: rgba(255,255,255,0.06);
+  stroke-width: 8;
+}
+
+.progress-ring__fill {
+  fill: none;
+  stroke: url(#ringGrad);
+  stroke-width: 8;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: center;
+  transition: stroke-dashoffset 1s var(--ease-out);
+}
+
+.progress-ring__text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-ring__pct {
+  font-size: 1.75rem;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  background: linear-gradient(135deg, var(--theme-primary), var(--theme-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.progress-ring__label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.progress-hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xl);
+  flex: 1;
+}
+
+.progress-hero-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.progress-hero-stat__value {
+  font-size: 1.4rem;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+}
+
+.progress-hero-stat__value--done { color: var(--accent-emerald); }
+.progress-hero-stat__value--active { color: var(--accent-indigo-light); }
+.progress-hero-stat__value--upcoming { color: var(--text-muted); }
+
+.progress-hero-stat__label {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* --- Phase Progress Bar --- */
+.phase-progress {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+  padding: 0 calc(36px + var(--space-md));
+}
+
+.phase-progress__bar {
+  flex: 1;
+  height: 8px;
+  background: rgba(255,255,255,0.06);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  position: relative;
+}
+
+.phase-progress__fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, var(--theme-primary), var(--theme-secondary));
+  transition: width 0.6s var(--ease-out);
+  position: relative;
+}
+
+.phase-progress__fill::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: -2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--theme-secondary);
+  box-shadow: 0 0 10px var(--theme-glow);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.phase-progress__fill[style*="width: 100"]::after { display: none; }
+.phase-progress__fill:not([style*="width: 0"])::after { opacity: 1; }
+
+.phase-progress__text {
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+  min-width: 36px;
+  text-align: right;
+}
+
+/* --- Editable Milestone --- */
+.milestone--editable { cursor: pointer; }
+.milestone--editable:hover { border-color: var(--theme-primary); }
+
+.milestone__name[contenteditable="true"],
+.milestone__desc[contenteditable="true"] {
+  outline: none;
+  border-bottom: 1px dashed var(--theme-primary);
+  padding-bottom: 2px;
+  caret-color: var(--theme-primary);
+  min-width: 40px;
+}
+
+.milestone__name[contenteditable="true"]:focus,
+.milestone__desc[contenteditable="true"]:focus {
+  border-bottom-color: var(--theme-secondary);
+  background: rgba(99, 102, 241, 0.05);
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+
+/* --- Status Dropdown --- */
+.status-toggle {
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+
+.status-toggle:hover .milestone__badge {
+  transform: scale(1.08);
+  filter: brightness(1.2);
+}
+
+.status-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  padding: 4px;
+  min-width: 140px;
+  z-index: 100;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: all 0.15s var(--ease-out);
+}
+
+.status-menu.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.status-menu__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.status-menu__item:hover {
+  background: var(--bg-glass);
+  color: var(--text-primary);
+}
+
+.status-menu__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.status-menu__dot--done { background: var(--accent-emerald); }
+.status-menu__dot--active { background: var(--accent-indigo-light); }
+.status-menu__dot--upcoming { background: var(--text-muted); }
+
+/* --- Add Milestone Button --- */
+.add-milestone-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  width: 100%;
+  padding: var(--space-md);
+  background: transparent;
+  border: 2px dashed var(--border-card);
+  border-radius: var(--radius-lg);
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.add-milestone-btn:hover {
+  border-color: var(--theme-primary);
+  color: var(--theme-primary);
+  background: var(--theme-glow);
+  transform: translateY(-1px);
+}
+
+.add-milestone-btn__icon {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+/* --- Delete Button --- */
+.milestone__delete {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: rgba(251, 113, 133, 0.1);
+  color: var(--accent-rose);
+  border-radius: 50%;
+  font-size: 0.7rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.15s var(--ease-out);
+  z-index: 10;
+}
+
+.milestone:hover .milestone__delete { opacity: 1; }
+.milestone__delete:hover {
+  background: rgba(251, 113, 133, 0.25);
+  transform: scale(1.15);
+}
+
+/* --- Toast notification --- */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  padding: 12px 20px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--accent-emerald);
+  border-radius: var(--radius-md);
+  color: var(--accent-emerald);
+  font-size: 0.8rem;
+  font-weight: 500;
+  z-index: 1000;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s var(--ease-out);
+  pointer-events: none;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .demo-progress-hero {
+    flex-direction: column;
+    padding: var(--space-lg);
+    gap: var(--space-lg);
+    text-align: center;
+  }
+  .progress-hero-stats {
+    justify-content: center;
+  }
+  .phase-progress {
+    padding: 0;
+  }
+}

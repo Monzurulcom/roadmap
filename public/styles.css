@@ -840,3 +840,552 @@ body {
   transform: translateY(0);
   transition: opacity 0.4s var(--ease-out) 0.05s, transform 0.4s var(--ease-out) 0.05s;
 }
+
+/* =============================================
+   Enhanced UI — Progress, Editing, Controls
+   ============================================= */
+
+/* --- Reset Button --- */
+.header__reset-btn {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--accent-rose);
+  background: rgba(251, 113, 133, 0.08);
+  border: 1px solid rgba(251, 113, 133, 0.2);
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+.header__reset-btn:hover {
+  background: rgba(251, 113, 133, 0.15);
+  transform: scale(1.05);
+}
+
+/* --- Progress Hero (Ring + Stats) --- */
+.progress-hero {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xl);
+  padding: var(--space-xl) var(--space-2xl);
+  margin: var(--space-xl) 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-xl);
+  backdrop-filter: blur(20px);
+}
+
+.progress-ring-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+.progress-ring-wrap svg { display: block; }
+
+.progress-ring__bg {
+  fill: none;
+  stroke: rgba(255,255,255,0.06);
+  stroke-width: 8;
+}
+.progress-ring__fill {
+  fill: none;
+  stroke: url(#ringGrad);
+  stroke-width: 8;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: center;
+  transition: stroke-dashoffset 1s var(--ease-out);
+}
+.progress-ring__text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.progress-ring__pct {
+  font-size: 1.75rem;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  background: linear-gradient(135deg, var(--theme-primary), var(--theme-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.progress-ring__label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.progress-hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xl);
+  flex: 1;
+}
+.progress-hero-stat { display: flex; flex-direction: column; gap: 2px; }
+.progress-hero-stat__value {
+  font-size: 1.4rem;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+}
+.progress-hero-stat__value--done { color: var(--accent-emerald); }
+.progress-hero-stat__value--active { color: var(--accent-indigo-light); }
+.progress-hero-stat__value--upcoming { color: var(--text-muted); }
+.progress-hero-stat__label {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* --- Phase Progress Bar --- */
+.phase-progress {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+  padding: 0 calc(36px + var(--space-md));
+}
+.phase-progress__bar {
+  flex: 1;
+  height: 8px;
+  background: rgba(255,255,255,0.06);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+.phase-progress__fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, var(--theme-primary), var(--theme-secondary));
+  transition: width 0.6s var(--ease-out);
+  position: relative;
+}
+.phase-progress__text {
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+  min-width: 36px;
+  text-align: right;
+}
+
+/* --- Editable Milestones --- */
+.milestone--editable { cursor: pointer; }
+.milestone--editable:hover { border-color: var(--theme-primary); }
+
+.milestone__name[contenteditable="true"],
+.milestone__desc[contenteditable="true"] {
+  outline: none;
+  border-bottom: 1px dashed var(--theme-primary);
+  padding-bottom: 2px;
+  caret-color: var(--theme-primary);
+}
+.milestone__name[contenteditable="true"]:focus,
+.milestone__desc[contenteditable="true"]:focus {
+  border-bottom-color: var(--theme-secondary);
+  background: rgba(99, 102, 241, 0.05);
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+
+.phase__title[contenteditable="true"],
+.phase__timeline[contenteditable="true"] {
+  outline: none;
+  border-bottom: 1px dashed var(--theme-primary);
+  padding-bottom: 2px;
+  caret-color: var(--theme-primary);
+  display: inline-block;
+}
+.phase__title[contenteditable="true"]:focus,
+.phase__timeline[contenteditable="true"]:focus {
+  border-bottom-color: var(--theme-secondary);
+  background: rgba(99, 102, 241, 0.05);
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+
+
+/* --- Status Dropdown --- */
+.status-toggle { position: relative; cursor: pointer; user-select: none; }
+.status-toggle:hover .milestone__badge { transform: scale(1.08); filter: brightness(1.2); }
+
+.status-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  padding: 4px;
+  min-width: 140px;
+  z-index: 100;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: all 0.15s var(--ease-out);
+}
+.status-menu.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+.status-menu__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.1s;
+}
+.status-menu__item:hover { background: var(--bg-glass); color: var(--text-primary); }
+
+.status-menu__dot { width: 8px; height: 8px; border-radius: 50%; }
+.status-menu__dot--done { background: var(--accent-emerald); }
+.status-menu__dot--active { background: var(--accent-indigo-light); }
+.status-menu__dot--upcoming { background: var(--text-muted); }
+
+/* --- Add / Delete Milestone --- */
+.add-milestone-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  width: 100%;
+  padding: var(--space-md);
+  background: transparent;
+  border: 2px dashed var(--border-card);
+  border-radius: var(--radius-lg);
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+.add-milestone-btn:hover {
+  border-color: var(--theme-primary);
+  color: var(--theme-primary);
+  background: var(--theme-glow);
+  transform: translateY(-1px);
+}
+
+.milestone__delete {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: rgba(251, 113, 133, 0.1);
+  color: var(--accent-rose);
+  border-radius: 50%;
+  font-size: 0.7rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.15s var(--ease-out);
+  z-index: 10;
+}
+.milestone:hover .milestone__delete { opacity: 1; }
+.milestone__delete:hover { background: rgba(251, 113, 133, 0.25); transform: scale(1.15); }
+
+/* --- Toast --- */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  padding: 12px 20px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--accent-emerald);
+  border-radius: var(--radius-md);
+  color: var(--accent-emerald);
+  font-size: 0.8rem;
+  font-weight: 500;
+  z-index: 1000;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s var(--ease-out);
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* --- Responsive additions --- */
+@media (max-width: 768px) {
+  .progress-hero {
+    flex-direction: column;
+    padding: var(--space-lg);
+    gap: var(--space-lg);
+    text-align: center;
+  }
+  .progress-hero-stats { justify-content: center; }
+  .phase-progress { padding: 0; }
+}
+
+/* =============================================
+   Auth — Login Modal & Buttons
+   ============================================= */
+.header__login-btn {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-glass);
+  border: 1px solid var(--border-card);
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+.header__login-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--theme-primary);
+  background: var(--theme-glow);
+}
+
+.header__logout-btn {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent-emerald);
+  background: rgba(52, 211, 153, 0.08);
+  border: 1px solid rgba(52, 211, 153, 0.2);
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+.header__logout-btn:hover {
+  background: rgba(52, 211, 153, 0.15);
+}
+
+.header__user-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-emerald);
+  box-shadow: 0 0 8px rgba(52, 211, 153, 0.5);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Login Overlay */
+.login-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease-out);
+}
+.login-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.login-modal {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  padding: var(--space-2xl);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  transform: translateY(20px) scale(0.95);
+  transition: transform 0.3s var(--ease-spring);
+}
+.login-overlay.open .login-modal {
+  transform: translateY(0) scale(1);
+}
+
+.login-modal__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: var(--bg-glass);
+  color: var(--text-muted);
+  border-radius: 50%;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.login-modal__close:hover {
+  background: rgba(251, 113, 133, 0.15);
+  color: var(--accent-rose);
+}
+
+.login-modal__icon { font-size: 2.5rem; margin-bottom: var(--space-md); }
+.login-modal__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: var(--space-xs);
+}
+.login-modal__subtitle {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: var(--space-xl);
+}
+
+.login-field {
+  text-align: left;
+  margin-bottom: var(--space-md);
+}
+.login-field__label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: var(--space-xs);
+}
+.login-field__input {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.login-field__input:focus {
+  border-color: var(--theme-primary);
+  box-shadow: 0 0 0 3px var(--theme-glow);
+}
+.login-field__input::placeholder { color: var(--text-muted); }
+
+.login-error {
+  font-size: 0.75rem;
+  color: var(--accent-rose);
+  min-height: 20px;
+  margin-bottom: var(--space-sm);
+}
+
+.login-modal__submit {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, var(--theme-primary), var(--theme-secondary));
+  border: none;
+  border-radius: var(--radius-md);
+  color: white;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+.login-modal__submit:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-glow);
+}
+
+/* --- Footer --- */
+.site-footer {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-xl) 0;
+  margin-top: var(--space-lg);
+  border-top: 1px solid var(--border-subtle);
+}
+.site-footer__text {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+.site-footer__login {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  opacity: 0.4;
+  transition: opacity 0.2s;
+}
+.site-footer__login:hover {
+  opacity: 0.8;
+}
+
+/* --- Sub-project Picker --- */
+.project-picker {
+  display: flex;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  margin-bottom: var(--space-xl);
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(16px);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.project-picker::-webkit-scrollbar { display: none; }
+
+.project-pill {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 10px 16px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--duration-fast) var(--ease-out);
+  flex-shrink: 0;
+}
+.project-pill:hover {
+  background: var(--bg-glass);
+  color: var(--text-primary);
+  border-color: var(--border-card);
+}
+.project-pill.active {
+  background: var(--theme-glow);
+  color: var(--text-primary);
+  border-color: var(--theme-primary);
+  box-shadow: 0 0 16px var(--theme-glow);
+}
+.project-pill__icon { font-size: 1rem; }
+.project-pill__info { display: flex; flex-direction: column; gap: 1px; text-align: left; }
+.project-pill__name { font-weight: 600; font-size: 0.8rem; }
+.project-pill__url {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+@media (max-width: 768px) {
+  .project-picker { gap: 4px; padding: 4px; }
+  .project-pill { padding: 8px 12px; font-size: 0.75rem; }
+  .project-pill__url { display: none; }
+}

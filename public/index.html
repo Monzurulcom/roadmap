@@ -40,8 +40,34 @@
       </div>
       <div class="header__meta">
         <span class="header__date" id="headerDate"></span>
+        <button class="header__reset-btn" id="resetBtn" title="Reset all changes" style="display:none;">↺ Reset</button>
+        <button class="header__logout-btn" id="logoutBtn" style="display:none;">
+          <span class="header__user-dot"></span> Logout
+        </button>
       </div>
     </header>
+
+    <!-- Login Modal -->
+    <div class="login-overlay" id="loginOverlay">
+      <div class="login-modal">
+        <button class="login-modal__close" id="loginClose">✕</button>
+        <div class="login-modal__icon">🔐</div>
+        <h2 class="login-modal__title">Admin Access</h2>
+        <p class="login-modal__subtitle">Sign in to edit roadmap content</p>
+        <form id="loginForm" autocomplete="off">
+          <div class="login-field">
+            <label class="login-field__label" for="loginUser">Username</label>
+            <input class="login-field__input" type="text" id="loginUser" placeholder="Enter username" required>
+          </div>
+          <div class="login-field">
+            <label class="login-field__label" for="loginPass">Password</label>
+            <input class="login-field__input" type="password" id="loginPass" placeholder="Enter password" required>
+          </div>
+          <div class="login-error" id="loginError"></div>
+          <button class="login-modal__submit" type="submit">Sign In</button>
+        </form>
+      </div>
+    </div>
 
     <!-- Roadmap Switcher -->
     <nav class="switcher" id="switcher">
@@ -64,6 +90,9 @@
       <div class="switcher__indicator" id="switcherIndicator"></div>
     </nav>
 
+    <!-- Progress Ring -->
+    <div class="progress-hero" id="progressHero"></div>
+
     <!-- Roadmap Content -->
     <main class="roadmap" id="roadmapContainer">
       <!-- Dynamically rendered -->
@@ -73,6 +102,12 @@
     <section class="overview" id="overview">
       <!-- Dynamically rendered -->
     </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <span class="site-footer__text">© 2026 WebnWell</span>
+      <a href="#" class="site-footer__login" id="loginBtn">Admin</a>
+    </footer>
   </div>
 
   <script src="/data.js"></script>

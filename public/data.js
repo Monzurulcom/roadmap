@@ -6,98 +6,174 @@ window.ROADMAP_DATA = {
   'vibe-coding': {
     id: 'vibe-coding',
     icon: '⚡',
-    title: 'Vibe Coding App',
-    heroTitle: 'Build the Future of Vibe Coding',
-    description: 'A creative coding platform that makes development feel effortless — AI-assisted, visually driven, and delightfully intuitive.',
+    title: 'Vibe Coding',
+    heroTitle: 'Build with AI-Powered Development',
+    description: 'All apps built using vibe coding — AI-assisted, rapidly iterated, and continuously evolving.',
     colors: ['#6366f1', '#a78bfa'],
-    phases: [
+    projects: [
       {
-        title: 'Foundation & Core Architecture',
-        timeline: 'Month 1–2',
-        milestones: [
+        id: 'mgt-system',
+        name: 'Management System',
+        icon: '📊',
+        url: 'mgt.webnwell.com',
+        phases: [
           {
-            name: 'Project scaffold & tech stack finalization',
-            desc: 'Set up monorepo, CI/CD pipeline, and core framework decisions (Next.js + Node.js + SQLite).',
-            status: 'done',
-            tags: ['infra', 'devops'],
+            title: 'Core Platform',
+            timeline: 'Completed',
+            milestones: [
+              { name: 'Task management module', desc: 'Full CRUD with subtasks, descriptions, live timer, and "Currently Working On" feature.', status: 'done', tags: ['core'] },
+              { name: 'Goals & milestones', desc: 'Goal tracking with milestone timelines, inline editing, and SVG progress visualization.', status: 'done', tags: ['core'] },
+              { name: 'Cooking & family SOP', desc: 'AI-powered cooking planner and family SOP modules with Gemini function calling.', status: 'done', tags: ['ai'] },
+              { name: 'Supplies inventory', desc: 'Emergency supplies tracker with FIFO stock management and consumption logging.', status: 'done', tags: ['module'] },
+            ],
           },
           {
-            name: 'AI integration layer',
-            desc: 'Build the abstraction layer for LLM interactions — prompt orchestration, context management, and response streaming.',
-            status: 'done',
-            tags: ['ai', 'backend'],
+            title: 'Mobile & UX',
+            timeline: 'In Progress',
+            milestones: [
+              { name: 'Mobile-first responsive design', desc: 'Full responsive audit at 390px/375px — touch targets, safe areas, hamburger menu.', status: 'done', tags: ['mobile', 'priority'] },
+              { name: 'PWA optimization', desc: 'Installable PWA with offline support, app icons, and native-like experience.', status: 'active', tags: ['pwa'] },
+              { name: 'Dark/light theme toggle', desc: 'System-aware theme switching with smooth transitions.', status: 'upcoming', tags: ['ux'] },
+            ],
           },
           {
-            name: 'Authentication & user management',
-            desc: 'OAuth + credential-based login, role-based access, and session management.',
-            status: 'active',
-            tags: ['security', 'priority'],
-          },
-          {
-            name: 'Core editor with syntax highlighting',
-            desc: 'Monaco-based code editor with custom themes, multi-file support, and keyboard shortcuts.',
-            status: 'upcoming',
-            tags: ['frontend', 'ux'],
+            title: 'Advanced Features',
+            timeline: 'Planned',
+            milestones: [
+              { name: 'Dashboard analytics', desc: 'Cross-module dashboard with productivity metrics, habit streaks, and trend charts.', status: 'upcoming', tags: ['analytics'] },
+              { name: 'Notification system', desc: 'Push notifications for deadlines, low stock alerts, and goal reminders.', status: 'upcoming', tags: ['feature'] },
+              { name: 'Multi-user support', desc: 'Family member accounts with shared modules and individual task views.', status: 'upcoming', tags: ['collab'] },
+            ],
           },
         ],
       },
       {
-        title: 'Intelligent Features',
-        timeline: 'Month 3–4',
-        milestones: [
+        id: 'google-ads',
+        name: 'Google Ads Optimizer',
+        icon: '📈',
+        url: 'app.webnwell.com',
+        phases: [
           {
-            name: 'AI code completion & suggestions',
-            desc: 'Context-aware inline suggestions powered by GPT-4o with caching for frequently used patterns.',
-            status: 'upcoming',
-            tags: ['ai', 'priority'],
+            title: 'Core Engine',
+            timeline: 'Completed',
+            milestones: [
+              { name: 'Campaign management dashboard', desc: 'Full Google Ads API integration with account monitoring, change history, and deep mirroring.', status: 'done', tags: ['core'] },
+              { name: 'AI intent analysis', desc: 'GPT-4o-mini powered search term classification with batch caching.', status: 'done', tags: ['ai'] },
+              { name: 'Negative keyword management', desc: 'Smart conflict detection, bulk operations, and automated cleanup.', status: 'done', tags: ['optimization'] },
+              { name: 'Perfect caching architecture', desc: 'Multi-layer caching — server API TTLs, AI batch cache, SWR client cache.', status: 'done', tags: ['performance'] },
+            ],
           },
           {
-            name: 'Visual component builder',
-            desc: 'Drag-and-drop UI builder that generates clean React/HTML code — bridging design and development.',
-            status: 'upcoming',
-            tags: ['frontend', 'ux'],
+            title: 'Automation Engine',
+            timeline: 'In Progress',
+            milestones: [
+              { name: 'Google Sheets sync', desc: 'Bidirectional campaign sync with incremental updates and data cleanup.', status: 'done', tags: ['automation'] },
+              { name: 'Keyword research pipeline', desc: 'Automated keyword research with location-specific matching and Keyword Planner integration.', status: 'active', tags: ['automation', 'priority'] },
+              { name: 'Auto-publish with exemptions', desc: 'Automated ad publishing handling soft policy violations via auto-exemption.', status: 'active', tags: ['automation'] },
+              { name: 'Conversion tracking wizard', desc: '6-step guided setup for Google Ads conversion tracking with verification.', status: 'done', tags: ['feature'] },
+            ],
           },
           {
-            name: 'Real-time collaboration',
-            desc: 'WebSocket-based multi-cursor editing, presence indicators, and live chat within projects.',
-            status: 'upcoming',
-            tags: ['backend', 'collab'],
-          },
-          {
-            name: 'Template marketplace',
-            desc: 'Curated starter templates for common app types — landing pages, dashboards, e-commerce, and more.',
-            status: 'upcoming',
-            tags: ['content', 'community'],
+            title: 'Scale & Intelligence',
+            timeline: 'Planned',
+            milestones: [
+              { name: 'Performance predictions', desc: 'ML-based bid and budget recommendations using historical performance data.', status: 'upcoming', tags: ['ai'] },
+              { name: 'Competitor analysis', desc: 'Auction insights integration with market position tracking and alerts.', status: 'upcoming', tags: ['analytics'] },
+              { name: 'White-label client portal', desc: 'Client-facing dashboards with branded reports and automated email summaries.', status: 'upcoming', tags: ['scale'] },
+            ],
           },
         ],
       },
       {
-        title: 'Polish & Launch',
-        timeline: 'Month 5–6',
-        milestones: [
+        id: 'meeting-app',
+        name: 'Meeting Room',
+        icon: '🎙️',
+        url: 'meeting.webnwell.com',
+        phases: [
           {
-            name: 'One-click deployment to cloud',
-            desc: 'Deploy to Vercel/Netlify/custom servers with environment management and preview URLs.',
-            status: 'upcoming',
-            tags: ['devops'],
+            title: 'Core Platform',
+            timeline: 'Completed',
+            milestones: [
+              { name: 'Real-time voice meetings', desc: 'WebSocket-based voice meetings with Whisper STT and GPT-4o responses.', status: 'done', tags: ['core'] },
+              { name: 'Meeting transcription', desc: 'Live transcription with speaker identification and searchable history.', status: 'done', tags: ['ai'] },
+              { name: 'Admin dashboard', desc: 'Meeting management, settings, and usage analytics.', status: 'done', tags: ['admin'] },
+            ],
           },
           {
-            name: 'Performance optimization',
-            desc: 'Code splitting, lazy loading, edge caching, and sub-200ms response times for AI features.',
-            status: 'upcoming',
-            tags: ['performance'],
+            title: 'Enhancements',
+            timeline: 'Planned',
+            milestones: [
+              { name: 'Multi-participant rooms', desc: 'Support multiple speakers in a single meeting room with turn management.', status: 'upcoming', tags: ['feature'] },
+              { name: 'Meeting summaries', desc: 'AI-generated meeting notes, action items, and follow-up reminders.', status: 'upcoming', tags: ['ai', 'priority'] },
+              { name: 'Calendar integration', desc: 'Sync with Google Calendar for scheduled meetings and reminders.', status: 'upcoming', tags: ['integration'] },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'docs-site',
+        name: 'Documentation',
+        icon: '📚',
+        url: 'docs.webnwell.com',
+        phases: [
+          {
+            title: 'Content & Design',
+            timeline: 'Completed',
+            milestones: [
+              { name: 'Client-facing documentation portal', desc: 'Zero-dependency SPA with page-based content system and search.', status: 'done', tags: ['core'] },
+              { name: 'FAQ & access guides', desc: 'Warm, non-technical language for platform access, setup, and troubleshooting.', status: 'done', tags: ['content'] },
+              { name: 'Responsive design', desc: 'Mobile-optimized layout with clean typography and navigation.', status: 'done', tags: ['mobile'] },
+            ],
           },
           {
-            name: 'Beta testing & user feedback',
-            desc: 'Invite-only beta with structured feedback collection, analytics, and rapid iteration cycles.',
-            status: 'upcoming',
-            tags: ['testing'],
+            title: 'Expansion',
+            timeline: 'Planned',
+            milestones: [
+              { name: 'Video tutorials', desc: 'Embedded walkthrough videos for complex setup processes.', status: 'upcoming', tags: ['content'] },
+              { name: 'AI search assistant', desc: 'Natural language search powered by document embeddings.', status: 'upcoming', tags: ['ai'] },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'roadmap-app',
+        name: 'Roadmap Dashboard',
+        icon: '🗺️',
+        url: 'roadmap.webnwell.com',
+        phases: [
+          {
+            title: 'Core Dashboard',
+            timeline: 'Completed',
+            milestones: [
+              { name: 'Multi-roadmap switcher', desc: '4 roadmaps with animated tab switching and ambient background effects.', status: 'done', tags: ['core'] },
+              { name: 'Progress visualization', desc: 'Circular progress ring, phase-level progress bars, and stat cards.', status: 'done', tags: ['ux'] },
+              { name: 'Inline editing', desc: 'Contenteditable milestones, status toggle dropdown, add/delete controls.', status: 'done', tags: ['feature'] },
+              { name: 'Auth & persistence', desc: 'Token-based login, server-side JSON storage, public read-only mode.', status: 'done', tags: ['security'] },
+            ],
           },
           {
-            name: 'Public launch',
-            desc: 'Product Hunt launch, documentation site, onboarding tutorials, and marketing push.',
-            status: 'upcoming',
-            tags: ['launch', 'priority'],
+            title: 'Enhancements',
+            timeline: 'In Progress',
+            milestones: [
+              { name: 'Sub-project navigation', desc: 'Nested project picker within roadmap categories for multi-app workflows.', status: 'active', tags: ['feature', 'priority'] },
+              { name: 'Drag-and-drop reordering', desc: 'Reorder milestones and phases via drag-and-drop.', status: 'upcoming', tags: ['ux'] },
+              { name: 'Timeline view', desc: 'Gantt-style horizontal timeline visualization alongside the card view.', status: 'upcoming', tags: ['feature'] },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'creation-upload',
+        name: 'Creation & Upload',
+        icon: '📤',
+        url: 'creation.webnwell.com',
+        phases: [
+          {
+            title: 'Initial Phase',
+            timeline: 'Planned',
+            milestones: [
+              { name: 'Define scope', desc: 'Define requirements for content creation and upload workflows.', status: 'upcoming', tags: ['planning'] }
+            ],
           },
         ],
       },
